@@ -3,25 +3,34 @@ VP_Cache
 
 VP_Cache
 
+## Instalação ##
 
-<?php
-
+```php
 require_once './VP_Cache.php';
+```
 
+## Dados salvo por 2 minutos  ###
+```php
 
-
-
-echo "<br /><br /> Dados salvando por 2 minutos ";
 VpCache::save('teste1', 'Hello World!', 2);
 
-echo "<br /><br /> Buscando dados no cache: ";
+```php
+
+## Buscando dados no cache ##
+```php
 echo VpCache::get('teste1');
+```
 
-echo "<br /><br /> Deletando dados do cache!";
+## Deletando dados do cache! ##
+
+```php
 VpCache::delete('teste1');
+```
 
+## Usando funcao remenber! ##
 
-echo "<br /><br /> Usando funcao remenber! ";
+```php
+
 $result = VpCache::remember('post', 1, function() {
                     /**
                      * Aqui dentro vc poderia por um consulta de banco de dados, 
@@ -44,8 +53,12 @@ echo '<pre>#';
 print_r($result);
 echo '<pre>#';
 
+```
+## deletando o cache remenber ##
 
-echo "<br /> Experimente deletar do cache a key post ou aguarde 1 mim e vc vera que novamente ele ira executar a funcao.
-    <br />para isso coloque a baixo: <br />";
-echo 'VpCache::delete("post"); ';
-//VpCache::delete('post'); //descomente para testar
+Experimente deletar do cache a key post ou aguarde 1 mim e vc vera que novamente ele ira executar a funcao 
+para isso coloque a baixo:
+
+```php
+    VpCache::delete("post"); 
+```

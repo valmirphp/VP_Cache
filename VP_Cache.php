@@ -1,4 +1,12 @@
 <?php
+/**
+ * Classe de cache para PHP, facil implementacao
+ * API Documentation: https://github.com/valmirphp/VP_Cache
+ * 
+ * @author Valmir Barbosa dos Santos <valmir.php@gmail.com>
+ * @version 1
+ */
+
 
 class VpCache {
 
