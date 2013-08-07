@@ -9,12 +9,11 @@ VP_Cache
 require_once './VP_Cache.php';
 ```
 
-## Dados salvo por 2 minutos  ###
-```php
+## Salvando dados por 2 minutos  ###
 
+```php
 VpCache::save('teste1', 'Hello World!', 2);
-
-```php
+```
 
 ## Buscando dados no cache ##
 ```php
