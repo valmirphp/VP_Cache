@@ -25,8 +25,8 @@ $result = VpCache::remember('post', 1, function() {
                     echo "<p><strong>Fazendo busca, lembre essa funcao so vai ser executada uma vez, apos atualizar a pagina eu sumirei :p </p></strong>";
                     
                     $value = array(
-                                array('alunos' => 'valmir', 'email' => 'valmir.php@gmail.com', 'idade' => 22),
-                                array('alunos' => 'Pafuncio', 'email' => 'pafuncio.php@gmail.com', 'idade' => 56),
+                                array('alunos' => 'valmir', 'email' => 'teste@gmail.com', 'idade' => 22),
+                                array('alunos' => 'Pafuncio', 'email' => 'teste2@gmail.com', 'idade' => 56),
                     );
                     
                     //retornando o valor para funcao anonima
@@ -35,9 +35,14 @@ $result = VpCache::remember('post', 1, function() {
 //VpCache::delete('post');
 // display the cached array
 echo '<pre>#';
-print_r($result);
+var_dump($result);
 echo '<pre>#';
 
+echo "<br /><br /> Esse arquivo sera chamado atraves da classe VP_Cache <br/>
+         Apenas uma vez e depodeis seus dados serao salvos no cache";
+
+$result_include = VpCache::rememberInclude('include-exemplo.php', 2);
+echo $result_include;
 
 echo "<br /> Experimente deletar do cache a key post ou aguarde 1 mim e vc vera que novamente ele ira executar a funcao.
     <br />para isso coloque a baixo: <br />";

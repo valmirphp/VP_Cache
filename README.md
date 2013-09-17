@@ -1,12 +1,13 @@
 VP_Cache
 ========
 
-VP_Cache
+Classe de cache para PHP, facil implementação.
+
 
 ## Instalação ##
 
 ```php
-require_once './VP_Cache.php';
+require_once 'VP_Cache.php';
 ```
 
 ## Salvando dados por 2 minutos  ###
@@ -39,25 +40,18 @@ $result = VpCache::remember('post', 1, function() {
                     echo "<p><strong>Fazendo busca, lembre essa funcao so vai ser executada uma vez, apos atualizar a pagina eu sumirei :p </p></strong>";
                     
                     $value = array(
-                                array('alunos' => 'valmir', 'email' => 'valmir.php@gmail.com', 'idade' => 22),
-                                array('alunos' => 'Pafuncio', 'email' => 'pafuncio.php@gmail.com', 'idade' => 56),
+                                array('alunos' => 'valmir', 'email' => 'teste@gmail.com', 'idade' => 22),
+                                array('alunos' => 'Pafuncio', 'email' => 'teste2@gmail.com', 'idade' => 56),
                     );
                     
                     //retornando o valor para funcao anonima
                     return $value;
                 });
-//VpCache::delete('post');
-// display the cached array
-echo '<pre>#';
-print_r($result);
-echo '<pre>#';
+
+// Exibindo o retorno
+var_dump($result);
+
 
 ```
-## deletando o cache remenber ##
 
-Experimente deletar do cache a key post ou aguarde 1 mim e vc vera que novamente ele ira executar a funcao 
-para isso coloque a baixo:
-
-```php
-    VpCache::delete("post"); 
-```
+## Salvando em cache um include de um arquivo php ##

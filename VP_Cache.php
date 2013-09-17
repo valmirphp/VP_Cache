@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Classe de cache para PHP, facil implementacao
  * API Documentation: https://github.com/valmirphp/VP_Cache
@@ -6,8 +7,6 @@
  * @author Valmir Barbosa dos Santos <valmir.php@gmail.com>
  * @version 1
  */
-
-
 class VpCache {
 
     /**
@@ -17,7 +16,6 @@ class VpCache {
      */
     protected static $dataCache = null;
 
-    
     /**
      * Responsaval por retornar o diretorio do cache e nome do arquivo
      * Mude a gosto :)
@@ -25,13 +23,12 @@ class VpCache {
      * @return string
      */
     protected static function getCacheDir() {
-        //$path = WP_CONTENT_DIR . '/uploads/cache/'; dica de path para Wordpress
+        //$path = WP_CONTENT_DIR . '/uploads/cache/'; //dica de path para Wordpress
         $path = __DIR__;
         $filename = $path . '/' . sha1('VpCache') . '.meta';
         return $filename;
     }
 
-    
     /**
      * Retorna um array de objetos armazenados no cache
      * este methodo é baseada em singleton, como a classe é estatica ela carrega apenas uma vez,
@@ -46,7 +43,6 @@ class VpCache {
         return self::$dataCache;
     }
 
-    
     /**
      * Esta funcao é a cereja da classe,
      * Foi baseada no cache do laravel, na qual ela na mesma funcao temos o get e o save.
@@ -58,7 +54,6 @@ class VpCache {
      * @param function anonima $function
      * @return array $data
      */
-
     public static function remember($key, $expire, $function) {
         $cachedData = self::getDataCache();
         $data = (isset($cachedData[$key])) ? $cachedData[$key] : null;
@@ -68,11 +63,40 @@ class VpCache {
         }
 
         $value = $function();
+        
+        if (is_string($value))
+            $value = self::removeEspaco($value);
+
         self::save($key, $value, $expire);
         return $value;
     }
 
-    
+    /**
+     * Cacheia um include de um arquivo php
+     *
+     * @param string $path nome do arquivo php 
+     * @param integer $minutes
+     * @return array $data
+     */
+    public static function rememberInclude($path, $expire) {
+        
+        $key = md5($path);
+        if ($expire == 0) {
+            return self::RenderPath($path);
+        }
+        $cachedData = self::getDataCache();
+        $data = (isset($cachedData[$key])) ? $cachedData[$key] : null;
+
+        if (self::checkDataExpired($data) === false && isset($data['data'])) {
+            return $data['data'];
+        }
+
+        $value = self::RenderPath($path);
+        self::save($key, $value, $expire);
+
+        return $value;
+    }
+
     /**
      * Retorna valor armazenado no cache
      * 
@@ -91,7 +115,6 @@ class VpCache {
         $value = (isset($data['data'])) ? $data['data'] : null;
         return $value;
     }
-    
 
     /**
      * Salva dados no cache, podendo passar um tempo baseado em minutos para expiracao do valor
@@ -115,7 +138,6 @@ class VpCache {
         self::StoreData();
     }
 
-    
     /**
      * Apaga esta key do cache
      * 
@@ -130,7 +152,6 @@ class VpCache {
         }
     }
 
-    
     /**
      * Apaga todo o cache
      * 
@@ -141,7 +162,6 @@ class VpCache {
         self::StoreData();
     }
 
-    
     /**
      * Apaga apenas os caches expirados
      * 
@@ -157,7 +177,6 @@ class VpCache {
 
         self::StoreData();
     }
-    
 
     /**
      * Carrega os valores cacheados para a classe
@@ -174,7 +193,6 @@ class VpCache {
         }
     }
 
-    
     /**
      * Salva o arquivo no disco
      * 
@@ -185,11 +203,10 @@ class VpCache {
         $r = file_put_contents(self::getCacheDir(), $cacheData);
 
         if (!$r) {
-            die("Falha ao savar arquivo do cache");
+            die("<b>Falha ao savar arquivo do cache:</b>" . self::getCacheDir() );
         }
     }
 
-    
     /**
      * verifica se data expirou
      * retorna true caso caso data expirada
@@ -204,6 +221,41 @@ class VpCache {
 
         return false;
     }
-    
+
+    /**
+     * Remove todos os espaços da string
+     * 
+     * @param type $str
+     * @return string 
+     */
+    protected static function removeEspaco($str) {
+        /// First remove the leading/trailing whitespace
+        $str = trim($str);
+        // Now remove any doubled-up whitespace
+        $str = preg_replace('/\s(?=\s)/', '', $str);
+        // Finally, replace any non-space whitespace, with a space
+        $str = preg_replace('/[\n\r\t]/', ' ', $str);
+
+        return $str;
+    }
+
+    /**
+     * Capitura os dados do arquivo
+     * 
+     * @param strin $path nome do arquivo php
+     * @return string
+     */
+    protected static function RenderPath($path) {
+
+        if (file_exists($path) == false) {
+            die("Arquivo não encontrado: $path");
+        }
+
+        ob_start();
+        require $path;
+        $ob = ob_get_clean();
+
+        return self::removeEspaco($ob);
+    }
 
 }
