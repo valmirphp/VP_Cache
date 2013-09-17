@@ -55,3 +55,10 @@ var_dump($result);
 ```
 
 ## Salvando em cache um include de um arquivo php ##
+
+```php
+
+$result_include = VpCache::rememberInclude('include-exemplo.php', 2);
+echo $result_include;
+
+```
